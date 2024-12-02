@@ -1,0 +1,32 @@
+{
+  "name": "andydixon/webex-interact",
+  "description": "An unofficial PHP library for WebEx Interact.",
+  "type": "library",
+  "require": {
+    "php": ">=7.4",
+    "guzzlehttp/guzzle": "^7.0",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "AndyDixon\\WebexInteract\\Sms\\": "src/Sms/"
+    }
+  },
+  "license": "GPL-3.0-or-later",
+  "keywords": [],
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Andy Dixon",
+      "email": "andy@andydixon.com"
+    }
+  ],
+  "homepage": "",
+  "funding": [],
+  "autoload-dev": {},
+  "require-dev": {},
+  "suggest": {},
+  "version": "0.1",
+  "provide": {},
+  "conflict": {}
+}
