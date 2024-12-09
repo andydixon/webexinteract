@@ -9,7 +9,7 @@
   },
   "autoload": {
     "psr-4": {
-      "AndyDixon\\WebexInteract\\Sms\\": "src/Sms/"
+      "andydixon\\webexinteract\\Sms\\": "src/Sms/"
     }
   },
   "license": "GPL-3.0-or-later",
