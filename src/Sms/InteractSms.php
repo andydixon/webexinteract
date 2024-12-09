@@ -72,13 +72,11 @@ class InteractSms
      */
     public function sendSms(): InteractResponse
     {
-        // If schedule_time is not set, default to now +5 minutes
         if ($this->scheduleTime === null) {
             $this->scheduleTime = new DateTime("now", new DateTimeZone("UTC"));
             $this->scheduleTime->add(new DateInterval("PT5M"));
         }
 
-        // If valid_until is not set, default to now +2 days
         if ($this->validUntil === null) {
             $this->validUntil = new DateTime("now", new DateTimeZone("UTC"));
             $this->validUntil->add(new DateInterval("P2D"));
@@ -99,7 +97,7 @@ class InteractSms
 
         $payload = json_encode($data->toArray());
         if ($payload === false) {
-            throw new InteractError("Failed to serialize payload");
+            throw new InteractError("Failed to serialise payload");
         }
 
         $client = new Client([
@@ -108,7 +106,7 @@ class InteractSms
                 'Content-Type' => 'application/json',
                 'X-auth-key' => $this->apiKey,
                 'Content-Length' => strlen($payload),
-                'User-Agent' => 'PHP/InteractSms',
+                'User-Agent' => 'AndyDixon/InteractSms',
             ]
         ]);
 
@@ -116,13 +114,63 @@ class InteractSms
             $response = $client->post($this->apiEndpoint, ['body' => $payload]);
             $statusCode = $response->getStatusCode();
             $responseBody = (string)$response->getBody();
+            $decoded = json_decode($responseBody, true);
 
-            if ($statusCode < 200 || $statusCode > 299) {
-                // Non-2xx response
-                throw new InteractError("API returned error $statusCode", $responseBody);
+            if ($decoded === null && json_last_error() !== JSON_ERROR_NONE) {
+                throw new InteractError("Invalid JSON in response", $responseBody);
             }
 
-            return new InteractResponse($statusCode, $responseBody);
+            // Extract errors if present
+            $errors = [];
+            if (isset($decoded['errors']) && is_array($decoded['errors'])) {
+                foreach ($decoded['errors'] as $err) {
+                    $errors[] = new InteractErrorObject(
+                        $err['field'] ?? null,
+                        $err['message'] ?? 'Unknown error message',
+                        isset($err['code']) ? (int)$err['code'] : null
+                    );
+                }
+            }
+
+            // Extract messages if present
+            $messages = [];
+            if (isset($decoded['messages']) && is_array($decoded['messages'])) {
+                foreach ($decoded['messages'] as $msg) {
+                    $messages[] = new InteractMessage(
+                        $msg['transaction_id'] ?? '',
+                        $msg['to'] ?? '',
+                        $msg['status'] ?? '',
+                        isset($msg['code']) ? (int)$msg['code'] : 0
+                    );
+                }
+            }
+
+            $requestId = $decoded['request_id'] ?? null;
+
+            // If non-2xx, treat as error
+            if ($statusCode < 200 || $statusCode > 299) {
+                // Return a response object so you can interrogate
+                $resp = new InteractResponse($statusCode, $responseBody, $requestId, $messages, $errors);
+                if (!empty($errors)) {
+                    // Throw exception with first error message or combined
+                    $errorMessages = array_map(fn($e) => $e->getMessage(), $errors);
+                    throw new InteractError("API returned error ($statusCode): " . implode("; ", $errorMessages), $responseBody);
+                } else {
+                    throw new InteractError("API returned HTTP status $statusCode without structured errors", $responseBody);
+                }
+            }
+
+            // 2xx status code
+            if (!empty($errors)) {
+                // Even though 2xx, errors present
+                $resp = new InteractResponse($statusCode, $responseBody, $requestId, $messages, $errors);
+                $errorMessages = array_map(fn($e) => $e->getMessage(), $errors);
+                throw new InteractError("API returned success status but with errors: " . implode("; ", $errorMessages), $responseBody);
+            }
+
+            // Successful scenario, return structured response
+            return new InteractResponse($statusCode, $responseBody, $requestId, $messages, $errors);
+
         } catch (Exception $e) {
             throw new InteractError("Fatal Error: " . $e->getMessage());
         }
