@@ -1,5 +1,5 @@
 {
-  "name": "andydixon/webex-interact",
+  "name": "andydixon/webexinteract",
   "description": "An unofficial PHP library for WebEx Interact.",
   "type": "library",
   "require": {
@@ -21,12 +21,11 @@
       "email": "andy@andydixon.com"
     }
   ],
-  "homepage": "",
+  "homepage": "https://www.andydixon.com/",
   "funding": [],
   "autoload-dev": {},
   "require-dev": {},
   "suggest": {},
-  "version": "0.1",
   "provide": {},
   "conflict": {}
 }
