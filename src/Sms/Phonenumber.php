@@ -2,6 +2,12 @@
 
 namespace andydixon\webexinteract\Sms;
 
+/**
+ * PhoneNumber Object class
+ * @author Andy Dixon <andy@andydixon.com>
+ * @license GPL3
+ */
+
 class Phonenumber
 {
     /**

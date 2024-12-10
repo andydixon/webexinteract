@@ -2,6 +2,12 @@
 
 namespace andydixon\webexinteract\Sms;
 
+/**
+ * InteractResponse Object class
+ * @author Andy Dixon <andy@andydixon.com>
+ * @license GPL3
+ */
+
 class InteractResponse
 {
     private int $status;
@@ -26,16 +32,28 @@ class InteractResponse
         $this->errors = $errors;
     }
 
+    /**
+     * Get the status code from Interact
+     * @return int
+     */
     public function getStatus(): int
     {
         return $this->status;
     }
 
+    /**
+     * Get the raw response in JSON format
+     * @return string
+     */
     public function getRawResponse(): string
     {
         return $this->rawResponse;
     }
 
+    /**
+     * Get the request ID
+     * @return string|null
+     */
     public function getRequestId(): ?string
     {
         return $this->requestId;
@@ -50,6 +68,7 @@ class InteractResponse
     }
 
     /**
+     * Return any errors
      * @return InteractErrorObject[]
      */
     public function getErrors(): array

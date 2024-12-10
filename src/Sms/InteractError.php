@@ -1,8 +1,14 @@
 <?php
-
 namespace andydixon\webexinteract\Sms;
-
 use Exception;
+
+/**
+ * InteractError class
+ * @author Andy Dixon <andy@andydixon.com>
+ * @license GPL3
+ */
+
+
 
 class InteractError extends Exception
 {

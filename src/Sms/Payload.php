@@ -2,6 +2,12 @@
 
 namespace andydixon\webexinteract\Sms;
 
+/**
+ * Interact API Payload Object class
+ * @author Andy Dixon <andy@andydixon.com>
+ * @license GPL3
+ */
+
 class Payload
 {
     private string $message_body;

@@ -38,6 +38,10 @@ $interact = InteractSms::sms_api("your-api-key")
     ->addRecipient("+1234567890")
     ->message("Hello, this is a test message!");
 
+// Optionally set scheduled time and expiry
+// $interact->sendAt((new DateTime('now', new DateTimeZone('UTC')))->add(new DateInterval('PT10M')));
+// $interact->expires((new DateTime('now', new DateTimeZone('UTC')))->add(new DateInterval('P1D')));
+
 try {
     $response = $interact->sendSms();
     if ($response->hasErrors()) {

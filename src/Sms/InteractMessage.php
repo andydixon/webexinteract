@@ -2,6 +2,12 @@
 
 namespace andydixon\webexinteract\Sms;
 
+/**
+ * InteractMessage Object class
+ * @author Andy Dixon <andy@andydixon.com>
+ * @license GPL3
+ */
+
 class InteractMessage
 {
     private string $transactionId;
@@ -17,16 +23,28 @@ class InteractMessage
         $this->code = $code;
     }
 
+    /**
+     * Return the transaction ID (May be requested for support purposes)
+     * @return string
+     */
     public function getTransactionId(): string
     {
         return $this->transactionId;
     }
 
+    /**
+     * Get the recipients of the message
+     * @return string
+     */
     public function getTo(): string
     {
         return $this->to;
     }
 
+    /**
+     * Get the status of the transaction
+     * @return string
+     */
     public function getStatus(): string
     {
         return $this->status;

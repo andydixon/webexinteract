@@ -8,6 +8,12 @@ use DateTimeZone;
 use DateInterval;
 use Exception;
 
+/**
+ * InteractSms class
+ * @author Andy Dixon <andy@andydixon.com>
+ * @license GPL3
+ */
+
 class InteractSms
 {
     private string $apiEndpoint;
@@ -37,30 +43,55 @@ class InteractSms
         return new self($apiKey);
     }
 
+    /**
+     * Add a recipient to receive an SMS
+     * @param string $recipient
+     * @return $this
+     */
     public function addRecipient(string $recipient): self
     {
         $this->to[] = $recipient;
         return $this;
     }
 
+    /**
+     * Set the message to be sent to the recipients
+     * @param string $message_body
+     * @return $this
+     */
     public function message(string $message_body): self
     {
         $this->body = $message_body;
         return $this;
     }
 
+    /**
+     * Set the originator of the message (the Sender Name)
+     * @param string $sender_name
+     * @return $this
+     */
     public function setOriginator(string $sender_name): self
     {
         $this->from = $sender_name;
         return $this;
     }
 
+    /**
+     * Set a timestamp of when the message expires (will not be delivered to the handset after this timestamp)
+     * @param DateTime $expiry_timestamp
+     * @return $this
+     */
     public function expires(DateTime $expiry_timestamp): self
     {
         $this->validUntil = $expiry_timestamp;
         return $this;
     }
 
+    /**
+     * Specify the timestamp that the message should be sent to the recipients
+     * @param DateTime $send_timestamp
+     * @return $this
+     */
     public function sendAt(DateTime $send_timestamp): self
     {
         $this->scheduleTime = $send_timestamp;
@@ -68,6 +99,7 @@ class InteractSms
     }
 
     /**
+     * Send the SMS message to WebEx Interact for processing
      * @throws InteractError
      */
     public function sendSms(): InteractResponse

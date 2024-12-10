@@ -1,7 +1,11 @@
 <?php
 
 namespace andydixon\webexinteract\Sms;
-
+/**
+ * InteractErrorObject class
+ * @author Andy Dixon <andy@andydixon.com>
+ * @license GPL3
+ */
 class InteractErrorObject
 {
     private ?string $field;
